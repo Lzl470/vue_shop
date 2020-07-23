@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item><a href="/">用户管理</a></el-breadcrumb-item>
+      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card>
@@ -31,7 +31,7 @@
           <template v-slot="scope">
             <el-button type="primary" icon="el-icon-edit" circle size="small" @click="showEditDialog(scope.row.id)"></el-button>
             <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="success" icon="el-icon-setting" circle size="small"></el-button>
+              <el-button type="success" icon="el-icon-setting" circle size="small" @click="setRole(scope.row)"></el-button>
             </el-tooltip>
             <el-button type="danger" icon="el-icon-delete" circle size="small" @click="removeUserById(scope.row.id)"></el-button>
           </template>
@@ -90,6 +90,27 @@
         <el-button type="primary" @click="editUserInfo">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="分配角色"
+      :visible.sync="setRoleDialogVisible"
+      width="50%" @close="setRoleDialogClosed">
+      <p>当前用户：{{userInfo.username}}</p>
+      <p>当前角色：{{userInfo.role_name}}</p>
+      <p>分配新角色：
+        <el-select v-model="selectedRoleId" placeholder="请选择">
+            <el-option
+              v-for="item in rolelist"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRoleDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -133,7 +154,11 @@ export default {
       editFormRules: {
         email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }, { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }],
         mobile: [{ required: true, message: '请输入手机号', trigger: 'blur' }, { validator: checkMobile, trigger: ['blur', 'change'] }]
-      }
+      },
+      setRoleDialogVisible: false,
+      userInfo: {},
+      rolelist: [],
+      selectedRoleId: ''
     }
   },
   created () {
@@ -210,6 +235,25 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    async setRole (userInfo) {
+      this.userInfo = userInfo
+      this.setRoleDialogVisible = true
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) return this.$message.error('获取角色列表失败')
+      this.rolelist = res.data
+    },
+    async saveRoleInfo () {
+      if (!this.selectedRoleId) return this.$message.error('请选择角色')
+      const { data: res } = await this.$http.put(`users/${this.userInfo.id}/role`, { rid: this.selectedRoleId })
+      if (res.meta.status !== 200) return this.$message.error('分配失败')
+      this.setRoleDialogVisible = false
+      this.$message.success('分配成功')
+      this.getUserList()
+    },
+    setRoleDialogClosed () {
+      this.selectedRoleId = ''
+      this.userInfo = {}
     }
   }
 }
@@ -222,4 +266,4 @@ export default {
   .el-pagination {
     margin-top: 15px;
   }
-</style>
+  </style>
