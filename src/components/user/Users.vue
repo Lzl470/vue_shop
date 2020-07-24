@@ -13,10 +13,10 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button @click="addDialogVisible = true">添加用户</el-button>
+          <el-button @click="addDialogVisible = true" type="primary">添加用户</el-button>
         </el-col>
       </el-row>
-      <el-table :data="userlist" border>
+      <el-table :data="userlist" border stripe>
         <el-table-column type="index"></el-table-column>
         <el-table-column label="姓名" prop="username"></el-table-column>
         <el-table-column label="邮箱" prop="email"></el-table-column>
@@ -45,7 +45,7 @@
             :page-size="queryInfo.pagesize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
-          </el-pagination>
+      </el-pagination>
     </el-card>
     <el-dialog
       title="添加用户"
@@ -126,7 +126,7 @@ export default {
       queryInfo: {
         query: '',
         pagenum: 1,
-        pagesize: 2
+        pagesize: 5
       },
       userlist: [],
       total: 0,
