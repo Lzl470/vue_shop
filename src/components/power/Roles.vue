@@ -37,15 +37,15 @@
         <el-table-column label="角色名称" prop="roleName"></el-table-column>
         <el-table-column label="角色描述" prop="roleDesc"></el-table-column>
         <el-table-column label="操作" width="150px">
-            <template v-slot="scope">
-              <el-button type="primary" icon="el-icon-edit" circle size="small" @click="showEditDialog(scope.row.id)"></el-button>
-              <el-tooltip effect="dark" content="分配权限" placement="top" :enterable="false">
-                <el-button type="success" icon="el-icon-setting" circle size="small" @click="showSetRightDialog(scope.row)"></el-button>
-              </el-tooltip>
-              <el-button type="danger" icon="el-icon-delete" circle size="small" @click="removeRoleById(scope.row.id)"></el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+          <template v-slot="scope">
+            <el-button type="primary" icon="el-icon-edit" circle size="small" @click="showEditDialog(scope.row.id)"></el-button>
+            <el-tooltip effect="dark" content="分配权限" placement="top" :enterable="false">
+              <el-button type="success" icon="el-icon-setting" circle size="small" @click="showSetRightDialog(scope.row)"></el-button>
+            </el-tooltip>
+            <el-button type="danger" icon="el-icon-delete" circle size="small" @click="removeRoleById(scope.row.id)"></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
         <el-dialog
           title="添加角色"
           :visible.sync="addRoleDialogVisible"
