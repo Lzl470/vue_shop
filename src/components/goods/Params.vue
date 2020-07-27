@@ -173,7 +173,7 @@ export default {
       const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes`, { params: { sel: this.activeName } })
       if (res.meta.status !== 200) return this.$message.error('获取参数列表失败')
       res.data.forEach(item => {
-        item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : []
+        item.attr_vals = item.attr_vals ? item.attr_vals.split(',') : []
         item.inputVisible = false
         item.inputValue = ''
       })
@@ -230,7 +230,7 @@ export default {
       })
     },
     async saveAttrVals (row) {
-      const { data: res } = await this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`, { attr_name: row.attr_name, attr_sel: row.attr_sel, attr_vals: row.attr_vals.join(' ') })
+      const { data: res } = await this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`, { attr_name: row.attr_name, attr_sel: row.attr_sel, attr_vals: row.attr_vals.join(',') })
       if (res.meta.status !== 200) return this.$message.error('修改失败')
       this.$message.success('修改成功')
     },

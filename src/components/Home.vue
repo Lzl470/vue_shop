@@ -104,6 +104,6 @@ export default {
     color: #fff;
     line-height: 24px;
     text-align: center;
-    letter-spacing: 0.5em;
+    letter-spacing: 0.2em;
   }
 </style>
